@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bandeja de entrada</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .elemento {
+            background-color: transparent;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            width: 60%;
+            overflow: hidden;
+        }
+
+        #countdown {
+            color: gray;
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        #message {
+            color: gray;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        function countdown() {
+            var seconds = 15;
+            var countdownElement = document.getElementById("countdown");
+
+            var countdownInterval = setInterval(function() {
+                countdownElement.textContent = "Recargar en " + seconds;
+                seconds--;
+
+                if (seconds < 0) {
+                    clearInterval(countdownInterval);
+                    location.reload();
+                }
+            }, 1000);
+        }
+
+        window.onload = function() {
+            countdown();
+        };
+    </script>
+</head>
+<body>
+    <h1>Bandeja de entrada ✉️</h1>
+    <p id="countdown">Recargar en 15</p>
+    <p id="message">Los emails pueden tardar hasta 5 minutos en aparecer aquí, por favor espera :)</p>
+
+    {% for elemento in resultado %}
+        <div class="elemento">
+            <p>{{ elemento | safe }}</p>
+        </div>
+    {% endfor %}
+</body>
+</html>

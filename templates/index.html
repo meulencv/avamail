@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Buscador de correos</title>
+  <style>
+    /* Estilos para el buscador */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 400px;
+      height: 30px;
+      padding: 5px;
+      font-size: 16px;
+      border: 1px solid #dfe1e5;
+      border-radius: 24px;
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+      outline: none;
+      margin-bottom: 10px;
+    }
+
+    button[type="submit"] {
+      height: 36px;
+      padding: 0 16px;
+      font-size: 14px;
+      display: inline-block;
+      vertical-align: middle;
+      font-weight: 400;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1px solid #dfe1e5;
+      background-color: #f8f9fa;
+      border-radius: 24px;
+      outline: none;
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <form method="POST" action="/">
+    <h2>Acceder a correo electrónico</h2>
+    <input type="text" name="texto" id="texto" placeholder="Introduzca correo" />
+    <button type="submit">Acceder</button>
+  </form>
+</div>
+</body>
+</html>
