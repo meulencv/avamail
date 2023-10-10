@@ -1,6 +1,6 @@
 flask
 Gunicorn
 python-dotenv
-
+bs4
 
 
