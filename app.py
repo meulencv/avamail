@@ -1,5 +1,4 @@
 from flask import Flask, render_template, redirect, request, url_for, make_response
-import requests
 from mail import buscar_correo
 
 app = Flask(__name__)
