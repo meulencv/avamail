@@ -13,11 +13,9 @@ def buscar_correo(email_buscar):
     if email_buscar == "admin@avarobotica.es":
         return ["Acceso denegado :("]
     else:
-        user = 'avaalumnos@zohomail.eu'
+        user = 'footytictactoe@yahoo.com'
         password = passw 
-        imap_url = 'imap.zoho.eu'
-
-
+        imap_url = 'imap.mail.yahoo.com'
         def obtener_cuerpo(msg):
             if msg.is_multipart():
                 for part in msg.walk():
@@ -31,6 +29,25 @@ def buscar_correo(email_buscar):
             else:
                 content_type = msg.get_content_type()
                 if content_type == 'text/html':
+                    charset = msg.get_content_charset()
+                    cuerpo = msg.get_payload(decode=True)
+                    if charset:
+                        cuerpo = cuerpo.decode(charset)
+                    return cuerpo
+
+            # Si no se encontró contenido HTML, buscar contenido de tipo text/plain
+            if msg.is_multipart():
+                for part in msg.walk():
+                    content_type = part.get_content_type()
+                    if content_type == 'text/plain':
+                        charset = part.get_content_charset()
+                        cuerpo = part.get_payload(decode=True)
+                        if charset:
+                            cuerpo = cuerpo.decode(charset)
+                        return cuerpo
+            else:
+                content_type = msg.get_content_type()
+                if content_type == 'text/plain':
                     charset = msg.get_content_charset()
                     cuerpo = msg.get_payload(decode=True)
                     if charset:
