@@ -1,77 +1,477 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Bandeja de entrada</title>
+    <title>AVA Robótica - Mi Bandeja de Entrada</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
+        :root {
+            --google-blue: #1a73e8;
+            --google-red: #ea4335;
+            --google-grey-light: #f8f9fa;
+            --google-grey-border: #e0e0e0;
+            --google-grey-text: #5f6368;
+            --google-grey-dark: #202124;
+            --hover-light-grey: #f1f3f4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: white;
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Roboto', 'Arial', sans-serif;
+            background-color: #fff;
+            color: var(--google-grey-dark);
+            height: 100vh;
             display: flex;
             flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
             align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--google-grey-border);
+            background: white;
+            z-index: 100;
         }
 
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-top: 40px;
-            margin-bottom: 40px;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--google-blue);
         }
 
-        .elemento {
-            background-color: transparent;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            width: 60%;
+        .robot-icon {
+            font-size: 28px;
+            animation: bounce 3s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
+            60% { transform: translateY(-3px); }
+        }
+
+        .user-info {
+            font-size: 14px;
+            color: var(--google-grey-text);
+            font-weight: 500;
+        }
+
+        /* Main container */
+        .main-container {
+            display: flex;
+            flex-grow: 1;
             overflow: hidden;
         }
 
-        #countdown {
-            color: gray;
-            text-align: center;
-            font-size: 24px;
-            margin-top: 20px;
+        /* Email list */
+        .email-list {
+            width: 350px;
+            border-right: 1px solid var(--google-grey-border);
+            overflow-y: auto;
+            background: white;
         }
 
-        #message {
-            color: gray;
+        .email-list-header {
+            padding: 16px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--google-grey-border);
+            background: var(--google-grey-light);
+        }
+
+        .email-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            border-bottom: 1px solid var(--google-grey-border);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .email-item:hover {
+            background-color: var(--hover-light-grey);
+        }
+
+        .email-item.selected {
+            background-color: #e8f0fe;
+            border-left: 4px solid var(--google-blue);
+        }
+
+        .email-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .email-details {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .email-sender {
+            font-weight: 500;
+            color: var(--google-grey-dark);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .email-subject {
+            font-size: 14px;
+            color: var(--google-grey-dark);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .email-snippet {
+            font-size: 12px;
+            color: var(--google-grey-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Email content */
+        .email-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        .email-content-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--google-grey-border);
+            background: var(--google-grey-light);
+        }
+
+        .email-content-subject {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .email-content-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+            color: var(--google-grey-text);
+        }
+
+        .email-content-body {
+            flex-grow: 1;
+            padding: 24px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        .no-selection {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--google-grey-text);
+            font-size: 16px;
+        }
+
+        .no-emails {
             text-align: center;
-            margin-top: 20px;
+            padding: 60px 24px;
+            color: var(--google-grey-text);
+        }
+
+        .no-emails .material-icons {
+            font-size: 64px;
+            color: var(--google-grey-border);
+            margin-bottom: 16px;
+        }
+
+        /* Progress bar */
+        .progress-section {
+            padding: 16px;
+            text-align: center;
+            border-top: 1px solid var(--google-grey-border);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--google-grey-border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--google-blue);
+            border-radius: 2px;
+            animation: countdown-progress 15s linear infinite;
+        }
+
+        @keyframes countdown-progress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .email-list {
+                width: 100%;
+                display: block;
+            }
+            
+            .email-content {
+                display: none;
+            }
+            
+            .email-content.mobile-show {
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1000;
+                background: white;
+            }
+            
+            .back-button {
+                display: block;
+                padding: 8px;
+                background: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+            }
+        }
+
+        .back-button {
+            display: none;
         }
     </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <span class="material-icons robot-icon">🤖</span>
+            AVA Robótica - Email
+        </div>
+        <div class="user-info">
+            {{ email }}
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Email List -->
+        <section class="email-list">
+            <div class="email-list-header">
+                Bandeja de entrada ({{ resultado|length if resultado and not resultado[0].get('error') else 0 }})
+            </div>
+            
+            {% if resultado and resultado|length > 0 and not resultado[0].get('error') %}
+                {% for email_data in resultado %}
+                <div class="email-item" onclick="showEmail({{ loop.index0 }})">
+                    <div class="email-avatar" style="background-color: {{ ['#1a73e8', '#ea4335', '#34a853', '#fbbc05', '#9aa0a6', '#ab47bc', '#00acc1', '#ff7043'][loop.index0 % 8] }}">
+                        {% if email_data.sender %}
+                            {{ email_data.sender[0]|upper }}
+                        {% else %}
+                            ?
+                        {% endif %}
+                    </div>
+                    <div class="email-details">
+                        <div class="email-sender">{{ email_data.sender or 'Remitente desconocido' }}</div>
+                        <div class="email-subject">{{ email_data.subject or 'Sin asunto' }}</div>
+                        <div class="email-snippet">{{ email_data.snippet or 'Sin contenido disponible' }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-emails">
+                    <span class="material-icons">mark_email_unread</span>
+                    <h3>Bandeja de entrada vacía</h3>
+                    {% if resultado and resultado[0].get('error') %}
+                        <p>{{ resultado[0].error }}</p>
+                    {% else %}
+                        <p>No se encontraron mensajes para <strong>{{ email }}</strong>.</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+            <div class="progress-section">
+                <div id="countdown">Actualizando en 15s</div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Email Content -->
+        <section class="email-content" id="email-content">
+            <div class="email-content-header">
+                <button class="back-button" onclick="hideEmailMobile()">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <div class="email-content-subject" id="content-subject">
+                    Seleccione un email para leer
+                </div>
+                <div class="email-content-meta" id="content-meta">
+                    <span id="content-sender">Remitente</span>
+                    <span id="content-date">Fecha</span>
+                </div>
+            </div>
+            <div class="email-content-body" id="content-body">
+                <div class="no-selection">
+                    <span class="material-icons" style="font-size: 48px; margin-right: 16px;">email</span>
+                    Haga clic en un email para ver su contenido
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript -->
     <script>
-        function countdown() {
-            var seconds = 15;
-            var countdownElement = document.getElementById("countdown");
+        // Datos de emails
+        const emails = [
+            {% if resultado and resultado|length > 0 and not resultado[0].get('error') %}
+                {% for email_data in resultado %}
+                {
+                    subject: {{ (email_data.subject or 'Sin asunto') | tojson }},
+                    sender: {{ (email_data.sender or 'Remitente desconocido') | tojson }},
+                    date: {{ (email_data.date or 'Sin fecha') | tojson }},
+                    content: {{ (email_data.content or '<p>Sin contenido disponible</p>') | tojson }}
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ];
 
-            var countdownInterval = setInterval(function() {
-                countdownElement.textContent = "Recargar en " + seconds;
+        let selectedEmailIndex = -1;
+
+        function showEmail(index) {
+            // Remover selección anterior
+            const prevSelected = document.querySelector('.email-item.selected');
+            if (prevSelected) {
+                prevSelected.classList.remove('selected');
+            }
+
+            // Seleccionar nuevo email
+            const emailItems = document.querySelectorAll('.email-item');
+            emailItems[index].classList.add('selected');
+            selectedEmailIndex = index;
+
+            // Obtener datos del email
+            const email = emails[index];
+
+            // Actualizar header
+            document.getElementById('content-subject').textContent = email.subject;
+            document.getElementById('content-sender').textContent = email.sender;
+            document.getElementById('content-date').textContent = formatDate(email.date);
+
+            // Mostrar contenido
+            const contentBody = document.getElementById('content-body');
+            contentBody.innerHTML = email.content;
+
+            // En móvil, mostrar el contenido
+            if (window.innerWidth <= 768) {
+                document.getElementById('email-content').classList.add('mobile-show');
+            }
+        }
+
+        function hideEmailMobile() {
+            document.getElementById('email-content').classList.remove('mobile-show');
+        }
+
+        function formatDate(dateString) {
+            if (!dateString || dateString === 'Sin fecha') return 'Sin fecha';
+            
+            try {
+                const date = new Date(dateString);
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                const emailDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                
+                if (emailDate.getTime() === today.getTime()) {
+                    return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                } else if (emailDate.getTime() === yesterday.getTime()) {
+                    return 'Ayer';
+                } else if (date.getFullYear() === now.getFullYear()) {
+                    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                } else {
+                    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+                }
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function startCountdown() {
+            let seconds = 15;
+            const countdownElement = document.getElementById("countdown");
+            const progressFill = document.querySelector('.progress-fill');
+
+            progressFill.style.animation = 'none';
+            void progressFill.offsetWidth;
+            progressFill.style.animation = 'countdown-progress 15s linear infinite';
+            
+            const interval = setInterval(() => {
                 seconds--;
-
-                if (seconds < 0) {
-                    clearInterval(countdownInterval);
+                if (countdownElement) {
+                   countdownElement.innerHTML = `Actualizando en ${seconds}s`;
+                }
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    if (countdownElement) {
+                       countdownElement.innerHTML = "Actualizando...";
+                    }
                     location.reload();
                 }
             }, 1000);
         }
 
+        // Inicializar
         window.onload = function() {
-            countdown();
+            startCountdown();
+            
+            // Seleccionar primer email automáticamente
+            if (emails.length > 0) {
+                showEmail(0);
+            }
         };
-    </script>
-</head>
-<body>
-    <h1>Bandeja de entrada ✉️</h1>
-    <p id="countdown">Recargar en 15</p>
-    <p id="message">Los emails pueden tardar hasta 5 minutos en aparecer aquí, por favor espera :)</p>
 
-    {% for elemento in resultado %}
-        <div class="elemento">
-            <p>{{ elemento | safe }}</p>
-        </div>
-    {% endfor %}
+        // Manejar cambio de tamaño de ventana
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                document.getElementById('email-content').classList.remove('mobile-show');
+            }
+        });
+    </script>
 </body>
 </html>

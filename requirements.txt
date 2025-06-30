@@ -1,6 +1,7 @@
 flask
 Gunicorn
 python-dotenv
-bs4
+beautifulsoup4
+secure-smtplib
 
 

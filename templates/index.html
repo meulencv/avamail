@@ -1,77 +1,845 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <title>Buscador de correos</title>
+  <title>AVA Robótica - Mi Correo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-    /* Estilos para el buscador */
-    body {
-      font-family: Arial, sans-serif;
+    * {
       margin: 0;
       padding: 0;
-      background-color: #f2f2f2;
+      box-sizing: border-box;
     }
 
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    body {
+      font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f5f5;
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      margin: 0;
     }
 
-    form {
+    .login-container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px 0 rgba(0,0,0,0.2);
+      overflow: hidden;
+      width: 100%;
+      max-width: 448px;
+      position: relative;
+      border: 1px solid #dadce0;
       display: flex;
       flex-direction: column;
+    }
+
+    /* Layout horizontal para pantallas anchas */
+    @media (min-width: 1200px) and (orientation: landscape) {
+      .login-container {
+        max-width: 1100px;
+        flex-direction: row;
+        align-items: stretch;
+        min-height: 650px;
+      }
+
+      .main-content {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        min-height: 650px;
+      }
+
+      .left-panel {
+        display: flex; /* Mostrar en pantallas grandes */
+        flex: 1;
+        background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+        color: white;
+        padding: 48px;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .right-panel {
+        flex: 1;
+        padding: 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow-y: auto;
+      }
+
+      .right-panel .header {
+        display: none; /* Ocultar header duplicado en horizontal */
+      }
+
+      .form-container {
+        padding: 0;
+        flex: none;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199px) and (orientation: landscape) {
+      .login-container {
+        max-width: 900px;
+        flex-direction: row;
+        align-items: stretch;
+        min-height: 500px;
+      }
+
+      .main-content {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        min-height: 500px;
+      }
+
+      .left-panel {
+        display: flex; /* Mostrar en tablets horizontales */
+        flex: 0.8;
+        background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+        color: white;
+        padding: 32px;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .right-panel {
+        flex: 1.2;
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow-y: auto;
+      }
+
+      .right-panel .header {
+        display: none; /* Ocultar header duplicado en horizontal */
+      }
+
+      .form-container {
+        padding: 0;
+        flex: none;
+      }
+
+      .help-section {
+        margin-top: 20px;
+        padding: 16px;
+      }
+
+      .tip-box {
+        margin-top: 16px;
+        padding: 12px;
+      }
+    }
+
+    .header {
+      background: white;
+      padding: 48px 48px 24px;
+      text-align: center;
+      position: relative;
+      border-bottom: none;
+    }
+
+    .header::after {
+      display: none;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 400;
+      color: #5f6368;
+      margin-bottom: 16px;
+      display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      gap: 8px;
+      letter-spacing: -0.25px;
     }
 
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
+    .robot-icon {
+      font-size: 24px;
+      animation: none;
     }
 
-    input[type="text"] {
-      width: 400px;
-      height: 30px;
-      padding: 5px;
+    .subtitle {
+      color: #5f6368;
       font-size: 16px;
-      border: 1px solid #dfe1e5;
-      border-radius: 24px;
-      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-      outline: none;
-      margin-bottom: 10px;
+      font-weight: 400;
+      margin-bottom: 32px;
     }
 
-    button[type="submit"] {
-      height: 36px;
-      padding: 0 16px;
-      font-size: 14px;
-      display: inline-block;
-      vertical-align: middle;
-      font-weight: 400;
+    .form-container {
+      padding: 0 48px 48px;
+    }
+
+    .welcome-text {
       text-align: center;
-      white-space: nowrap;
+      margin-bottom: 32px;
+    }
+
+    .welcome-title {
+      font-size: 24px;
+      font-weight: 400;
+      color: #202124;
+      margin-bottom: 8px;
+      letter-spacing: -0.25px;
+    }
+
+    .welcome-subtitle {
+      color: #5f6368;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    /* Estilos para layout horizontal */
+    .left-panel .logo {
+      color: white;
+      font-size: 32px;
+      margin-bottom: 16px;
+      justify-content: flex-start;
+    }
+
+    .left-panel .subtitle {
+      color: rgba(255,255,255,0.9);
+      font-size: 20px;
+      margin-bottom: 40px;
+    }
+
+    .left-panel .header-illustration {
+      text-align: center;
+      font-size: 80px;
+      opacity: 0.8;
+      margin-top: 40px;
+    }
+
+    .right-panel .welcome-text {
+      text-align: left;
+      margin-bottom: 32px;
+    }
+
+    .right-panel .welcome-title {
+      font-size: 28px;
+    }
+
+    .right-panel .welcome-subtitle {
+      font-size: 16px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .left-panel {
+      display: none; /* Oculto por defecto en móvil */
+    }
+
+    .right-panel {
+      width: 100%;
+    }
+
+    .selector-group {
+      margin-bottom: 24px;
+    }
+
+    .selector-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #3c4043;
+      margin-bottom: 8px;
+    }
+
+    .selector-options {
+      display: flex;
+      gap: 8px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      padding: 4px;
+      background: #f8f9fa;
+    }
+
+    .selector-option {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 4px;
       cursor: pointer;
-      border: 1px solid #dfe1e5;
-      background-color: #f8f9fa;
-      border-radius: 24px;
+      transition: all 0.15s ease;
+      font-size: 14px;
+      font-weight: 500;
+      color: #5f6368;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .selector-option.active {
+      background: #1a73e8;
+      color: white;
+      box-shadow: 0 1px 3px 0 rgba(66,133,244,.3);
+    }
+
+    .selector-option:hover:not(.active) {
+      background: rgba(26, 115, 232, 0.08);
+      color: #1a73e8;
+    }
+
+    .selector-icon {
+      font-size: 16px;
+    }
+
+    .selector-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #3c4043;
+      margin-bottom: 8px;
+    }
+
+    .selector-options {
+      display: flex;
+      gap: 8px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      padding: 4px;
+      background: #f8f9fa;
+    }
+
+    .selector-option {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-size: 14px;
+      font-weight: 500;
+      color: #5f6368;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .selector-option.active {
+      background: #1a73e8;
+      color: white;
+      box-shadow: 0 1px 3px 0 rgba(66,133,244,.3);
+    }
+
+    .selector-option:hover:not(.active) {
+      background: rgba(26, 115, 232, 0.08);
+      color: #1a73e8;
+    }
+
+    .selector-icon {
+      font-size: 16px;
+    }
+
+    .input-field {
+      width: 100%;
+      height: 56px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      padding: 16px 48px 16px 16px;
+      font-size: 16px;
+      transition: all 0.15s ease-in-out;
+      background: white;
+      color: #202124;
+    }
+
+    .input-field:hover {
+      border-color: #4285f4;
+      box-shadow: 0 1px 3px 0 rgba(66,133,244,.3);
+    }
+
+    .input-field:focus {
       outline: none;
-      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+      border-color: #4285f4;
+      border-width: 2px;
+      box-shadow: 0 1px 3px 0 rgba(66,133,244,.3);
+    }
+
+    .input-field::placeholder {
+      color: #80868b;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #5f6368;
+      font-size: 20px;
+    }
+
+    .login-btn {
+      width: 100%;
+      height: 36px;
+      background: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 32px;
+      letter-spacing: 0.25px;
+    }
+
+    .login-btn:hover {
+      background: #1765cc;
+      box-shadow: 0 1px 2px 0 rgba(66,133,244,.3), 0 1px 3px 1px rgba(66,133,244,.15);
+    }
+
+    .login-btn:focus {
+      background: #1765cc;
+      box-shadow: 0 1px 2px 0 rgba(66,133,244,.3), 0 1px 3px 1px rgba(66,133,244,.15);
+      outline: none;
+    }
+
+    .login-btn:active {
+      background: #1557b0;
+      box-shadow: 0 1px 2px 0 rgba(66,133,244,.3), 0 2px 6px 2px rgba(66,133,244,.15);
+    }
+
+    .help-section {
+      background: #fafbfc;
+      border: 1px solid #e8eaed;
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    .help-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #3c4043;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .examples {
+      display: grid;
+      gap: 12px;
+    }
+
+    .example-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: white;
+      border-radius: 4px;
+      border: 1px solid #e8eaed;
+      transition: all 0.15s ease;
+    }
+
+    .example-item:hover {
+      border-color: #dadce0;
+      box-shadow: 0 1px 3px 0 rgba(60,64,67,.3);
+    }
+
+    .example-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: white;
+      font-weight: 500;
+    }
+
+    .student-icon { background: #34a853; }
+    .admin-icon { background: #ea4335; }
+
+    .example-text {
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .example-email {
+      font-family: monospace;
+      color: #5f6368;
+      font-size: 12px;
+    }
+
+    .flash-messages {
+      margin-bottom: 24px;
+    }
+
+    .flash-message {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .flash-error {
+      background: #fce8e6;
+      color: #d93025;
+      border: 1px solid #fad2cf;
+    }
+
+    .flash-success {
+      background: #e6f4ea;
+      color: #137333;
+      border: 1px solid #ceead6;
+    }
+
+    .flash-info {
+      background: #e8f0fe;
+      color: #1967d2;
+      border: 1px solid #d2e3fc;
+    }
+
+    .tip-box {
+      background: #fff3e0;
+      border: 1px solid #fdd663;
+      border-radius: 4px;
+      padding: 16px;
+      margin-top: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .tip-icon {
+      font-size: 20px;
+      color: #ea8600;
+      margin-top: 2px;
+    }
+
+    .tip-text {
+      color: #3c4043;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 767px) {
+      .login-container {
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        min-height: 100vh;
+        max-width: none;
+      }
+      
+      .header {
+        padding: 32px 24px 24px;
+      }
+      
+      .form-container {
+        padding: 0 24px 32px;
+        flex: 1;
+      }
+
+      .logo {
+        font-size: 22px;
+      }
+
+      .welcome-title {
+        font-size: 22px;
+      }
+
+      .help-section {
+        margin-top: 32px;
+        padding: 20px;
+      }
+
+      .tip-box {
+        padding: 12px;
+      }
+
+      .examples {
+        gap: 8px;
+      }
+
+      .example-item {
+        padding: 8px;
+      }
+
+      .example-text {
+        font-size: 13px;
+      }
+
+      .example-email {
+        font-size: 11px;
+      }
+
+      .selector-options {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .selector-option {
+        padding: 16px;
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0;
+      }
+
+      .header {
+        padding: 24px 16px 20px;
+      }
+      
+      .form-container {
+        padding: 0 16px 24px;
+      }
+
+      .logo {
+        font-size: 20px;
+        gap: 6px;
+      }
+
+      .robot-icon {
+        font-size: 20px;
+      }
+
+      .welcome-title {
+        font-size: 20px;
+      }
+
+      .welcome-subtitle, .subtitle {
+        font-size: 14px;
+      }
+
+      .input-field {
+        height: 48px;
+        font-size: 16px;
+      }
+
+      .help-section {
+        padding: 16px;
+      }
+
+      .help-title {
+        font-size: 13px;
+      }
+
+      .tip-box {
+        padding: 12px;
+      }
+
+      .tip-text {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .header {
+        padding: 20px 12px 16px;
+      }
+      
+      .form-container {
+        padding: 0 12px 20px;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      .welcome-title {
+        font-size: 18px;
+      }
+
+      .input-field {
+        padding: 12px 40px 12px 12px;
+      }
+
+      .help-section, .tip-box {
+        padding: 12px;
+      }
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <form method="POST" action="/">
-    <h2>Acceder a correo electrónico</h2>
-    <input type="text" name="texto" id="texto" placeholder="Introduzca correo" />
-    <button type="submit">Acceder</button>
-  </form>
-</div>
+  <div class="login-container">
+    <div class="main-content">
+      <!-- Panel Izquierdo (solo visible en horizontal) -->
+      <div class="left-panel">
+        <div class="header-content">
+          <div class="logo">
+            <span class="robot-icon">🤖</span>
+            AVA Robótica
+          </div>
+          <div class="subtitle">Plataforma Educativa Digital</div>
+          <p style="color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.5; margin-top: 16px;">
+            Accede a tu correo estudiantil o de profesor de forma rápida y segura. 
+            Selecciona tu tipo de cuenta y ingresa tu nombre.
+          </p>
+        </div>
+        <div class="header-illustration">
+          📚💻🎓
+        </div>
+      </div>
+
+      <!-- Panel Derecho -->
+      <div class="right-panel">
+        <!-- Header para móvil/vertical -->
+        <div class="header">
+          <div class="logo">
+            <span class="robot-icon">🤖</span>
+            AVA Robótica
+          </div>
+          <div class="subtitle">Mi Correo Estudiantil</div>
+        </div>
+
+        <div class="form-container">
+          <div class="welcome-text">
+            <h1 class="welcome-title">¡Hola!</h1>
+            <p class="welcome-subtitle">Escribe tu nombre para ver tus emails</p>
+          </div>
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              <div class="flash-messages">
+                {% for category, message in messages %}
+                  <div class="flash-message flash-{{ category }}">
+                    <span class="material-icons">
+                      {% if category == 'error' %}error{% elif category == 'success' %}check_circle{% else %}info{% endif %}
+                    </span>
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endwith %}
+
+          <form method="POST" action="/">
+            <div class="selector-group">
+              <label class="selector-label">Tipo de cuenta:</label>
+              <div class="selector-options">
+                <button type="button" class="selector-option active" data-type="estudiante">
+                  <span class="material-icons selector-icon">school</span>
+                  Estudiante
+                </button>
+                <button type="button" class="selector-option" data-type="profesor">
+                  <span class="material-icons selector-icon">person</span>
+                  Profesor
+                </button>
+              </div>
+              <input type="hidden" name="tipo_cuenta" id="tipo_cuenta" value="estudiante">
+            </div>
+
+            <div class="input-group">
+              <input 
+                type="text" 
+                name="texto" 
+                id="texto" 
+                class="input-field"
+                placeholder="Escribe tu nombre (ej: juan, maria, ana...)"
+                required 
+                autocomplete="username"
+              />
+              <span class="material-icons input-icon">person</span>
+            </div>
+            
+            <button type="submit" class="login-btn">
+              <span class="material-icons">mail</span>
+              Ver mis Emails
+            </button>
+          </form>
+
+          <div class="help-section">
+            <h3 class="help-title">
+              <span class="material-icons">help_outline</span>
+              ¿Cómo funciona?
+            </h3>
+            
+            <div class="examples">
+              <div class="example-item">
+                <div class="example-icon student-icon">👨‍🎓</div>
+                <div>
+                  <div class="example-text">
+                    <strong>Estudiantes:</strong> Solo necesitas tu nombre
+                  </div>
+                  <div class="example-email">juan → juan.estudiante@avarobotica.es</div>
+                </div>
+              </div>
+              
+              <div class="example-item">
+                <div class="example-icon admin-icon">👨‍🏫</div>
+                <div>
+                  <div class="example-text">
+                    <strong>Profesores:</strong> Requieren contraseña
+                  </div>
+                  <div class="example-email">admin → admin@avarobotica.es 🔒</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tip-box">
+            <span class="material-icons tip-icon">lightbulb</span>
+            <div class="tip-text">
+              <strong>¡Súper fácil!</strong> Selecciona tu tipo de cuenta arriba. Si eres estudiante, solo escribe tu nombre y automáticamente se convertirá en un email (ej: "ana" → "ana.estudiante@avarobotica.es"). Si eres profesor, necesitarás contraseña.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectorOptions = document.querySelectorAll('.selector-option');
+      const tipoInput = document.getElementById('tipo_cuenta');
+      const textoInput = document.getElementById('texto');
+      
+      selectorOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          // Remover clase active de todas las opciones
+          selectorOptions.forEach(opt => opt.classList.remove('active'));
+          
+          // Agregar clase active a la opción seleccionada
+          this.classList.add('active');
+          
+          // Actualizar el input hidden
+          const tipo = this.dataset.type;
+          tipoInput.value = tipo;
+          
+          // Actualizar placeholder según el tipo
+          if (tipo === 'estudiante') {
+            textoInput.placeholder = 'Escribe tu nombre (ej: juan, maria, ana...)';
+          } else {
+            textoInput.placeholder = 'Escribe tu usuario (ej: admin, director...)';
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
